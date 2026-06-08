@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What's for Dinner? ✨</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Smooth transitions for a native app feel */
+        .mood-btn, .time-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center p-4 font-sans text-slate-800">
+
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-6 border border-slate-100 transition-all">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">Chef's Roulette 🍽️</h1>
+            <p class="text-sm text-slate-500 mt-1">What kind of vibe are we cooking today?</p>
+        </header>
+
+        <div class="space-y-5 mb-8">
+            <div>
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">The Mood</label>
+                <div class="grid grid-cols-3 gap-2" id="moodGroup">
+                    <button onclick="selectMood(this, 'healthy')" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 hover:border-slate-400 font-medium">🥗 Healthy</button>
+                    <button onclick="selectMood(this, 'comfort')" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 hover:border-slate-400 font-medium">🍝 Comfort</button>
+                    <button onclick="selectMood(this, 'sweet')" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 hover:border-slate-400 font-medium">🧁 Sweet</button>
+                </div>
+            </div>
+
+            <div>
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Time Budget</label>
+                <div class="grid grid-cols-2 gap-2" id="timeGroup">
+                    <button onclick="selectTime(this, 'quick')" class="time-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 hover:border-slate-400 font-medium">⚡ Quick (< 20m)</button>
+                    <button onclick="selectTime(this, 'leisurely')" class="time-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 hover:border-slate-400 font-medium">🍷 Leisurely</button>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="generateRecipe()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-4 rounded-xl shadow-lg shadow-slate-950/10 active:scale-[0.98] transition-all text-center block text-base">
+            ✨ Spin the Recipe Wheel
+        </button>
+
+        <div id="recipeCard" class="mt-8 pt-6 border-t border-slate-100 hidden">
+            <h2 id="recipeTitle" class="text-xl font-bold text-slate-900 mb-2"></h2>
+            
+            <div class="flex gap-2 mb-5">
+                <span id="tagMood" class="text-xs font-semibold px-2.5 py-1 rounded-full"></span>
+                <span id="tagTime" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600"></span>
+            </div>
+            
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Ingredients</h3>
+            <ul id="recipeIngredients" class="text-sm space-y-1.5 text-slate-600 list-disc list-inside mb-5 pl-1"></ul>
+
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Quick Steps</h3>
+            <ol id="recipeSteps" class="text-sm space-y-2.5 text-slate-600 list-decimal list-inside pl-1"></ol>
+        </div>
+    </div>
+
+    <script>
+        // Recipe Database Matrix
+        const recipes = [
+            { title: "Crispy Garlic Chili Noodles", mood: "comfort", time: "quick", ingredients: ["Ramen or Udon noodles", "Garlic (4 cloves, minced)", "Chili crisp oil (2 tbsp)", "Soy sauce (1 tbsp)", "Green onions"], steps: ["Boil noodles according to package instructions.", "Sauté minced garlic in a pan with a splash of neutral oil until fragrant.", "Toss noodles into the pan with garlic, soy sauce, and chili crisp oil.", "Garnish with chopped green onions and serve warm."] },
+            { title: "Lemon Parmesan Arugula Salad", mood: "healthy", time: "quick", ingredients: ["Fresh arugula (4 cups)", "Shaved parmesan cheese", "1 Fresh lemon", "Extra virgin olive oil", "Toasted pine nuts", "Flaky sea salt"], steps: ["Wash and thoroughly dry the arugula leaves.", "Whisk fresh lemon juice with olive oil, salt, and black pepper in a large bowl.", "Toss the arugula gently in the dressing until coated.", "Top generously with shaved parmesan and toasted pine nuts right before serving."] },
+            { title: "5-Minute Berry Mug Cobbler", mood: "sweet", time: "quick", ingredients: ["Frozen mixed berries (1/2 cup)", "All-purpose flour (3 tbsp)", "Sugar (1 tbsp)", "Butter (1 tbsp, melted)", "Milk (1 tbsp)"], steps: ["Place berries in a microwave-safe mug and heat for 30 seconds to soften.", "In a tiny bowl, mix flour, sugar, melted butter, and milk into a soft dough.", "Drop spoonfuls of dough over the warm berries.", "Microwave on high for 60-90 seconds until the cobbler topping is firm."] },
+            { title: "Slow-Braised Tuscan Cream Chicken", mood: "comfort", time: "leisurely", ingredients:
