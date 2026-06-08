@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+      <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,122 +7,193 @@
     <title>What's for Dinner? ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .mood-btn, .time-btn { transition: all 0.2s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .custom-select { -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1rem; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center p-4 font-sans text-slate-800">
+<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans text-slate-800 flex flex-col items-center">
 
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-6 border border-slate-100">
-        
+    <!-- Main Container -->
+    <div class="max-w-4xl w-full">
+        <!-- App Header -->
         <header class="text-center mb-8">
-            <h1 class="text-2xl font-bold tracking-tight text-slate-900">Chef's Roulette 🍽️</h1>
-            <p class="text-sm text-slate-500 mt-1">What kind of vibe are we cooking today?</p>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">The Kitchen Matrix 🍽️</h1>
+            <p class="text-sm text-slate-500 mt-1.5">Tailor your perfect menu instantly</p>
         </header>
 
-        <div class="space-y-5 mb-8">
-            <div>
-                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">The Mood</label>
-                <div class="grid grid-cols-3 gap-2" id="moodGroup">
-                    <button data-mood="healthy" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium">🥗 Healthy</button>
-                    <button data-mood="comfort" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium">🍝 Comfort</button>
-                    <button data-mood="sweet" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium">🧁 Sweet</button>
+        <!-- Filter Dashboard Panel -->
+        <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-100 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- Time Selection -->
+                <div>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">Time Frame</label>
+                    <select id="timeFilter" class="custom-select w-full bg-slate-50 border border-slate-200 text-slate-700 py-3 px-4 pr-8 rounded-xl font-medium focus:outline-none focus:border-slate-400 transition-all text-sm">
+                        <option value="all">⏱️ Any Timeframe</option>
+                        <option value="under30">&lt; 30 Minutes</option>
+                        <option value="45min">45 Minutes</option>
+                        <option value="leisurely">🍷 Leisurely</option>
+                    </select>
+                </div>
+
+                <!-- Protein Dropdown -->
+                <div>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">Protein Focus</label>
+                    <select id="proteinFilter" class="custom-select w-full bg-slate-50 border border-slate-200 text-slate-700 py-3 px-4 pr-8 rounded-xl font-medium focus:outline-none focus:border-slate-400 transition-all text-sm">
+                        <option value="all">🥩 Any Choice</option>
+                        <option value="chicken">Chicken</option>
+                        <option value="beef">Beef / Steak</option>
+                        <option value="seafood">Seafood</option>
+                        <option value="vegetarian">Vegetarian</option>
+                    </select>
+                </div>
+
+                <!-- Cuisine Dropdown -->
+                <div>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">Cuisine Style</label>
+                    <select id="cuisineFilter" class="custom-select w-full bg-slate-50 border border-slate-200 text-slate-700 py-3 px-4 pr-8 rounded-xl font-medium focus:outline-none focus:border-slate-400 transition-all text-sm">
+                        <option value="all">🌏 Any Cuisine</option>
+                        <option value="italian">Italian</option>
+                        <option value="asian">Asian Inspired</option>
+                        <option value="mexican">Mexican / Tex-Mex</option>
+                        <option value="american">American Classic</option>
+                    </select>
                 </div>
             </div>
 
-            <div>
-                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Time Budget</label>
-                <div class="grid grid-cols-2 gap-2" id="timeGroup">
-                    <button data-time="quick" class="time-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium">⚡ Quick (&lt; 20m)</button>
-                    <button data-time="leisurely" class="time-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium">🍷 Leisurely</button>
-                </div>
-            </div>
+            <!-- Action Trigger -->
+            <button id="searchBtn" class="w-full mt-6 bg-slate-900 hover:bg-slate-800 text-white font-medium py-3.5 rounded-xl shadow-lg shadow-slate-950/10 active:scale-[0.99] transition-all text-center block text-sm cursor-pointer">
+                ✨ Generate Match Results
+            </button>
         </div>
 
-        <button id="spinBtn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-4 rounded-xl shadow-lg shadow-slate-950/10 active:scale-[0.98] transition-all text-center block text-base cursor-pointer">
-            ✨ Spin the Recipe Wheel
-        </button>
+        <!-- Recipe Cards Output Grid -->
+        <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+    </div>
 
-        <div id="recipeCard" class="mt-8 pt-6 border-t border-slate-100 hidden">
-            <h2 id="recipeTitle" class="text-xl font-bold text-slate-900 mb-2"></h2>
+    <!-- Full-Screen Interactive Modal for Recipe Detail Display -->
+    <div id="recipeModal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-6 overflow-y-auto max-h-[85vh] relative border border-slate-100">
+            <button id="closeModal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-xl p-2 cursor-pointer">&times;</button>
             
-            <div class="flex gap-2 mb-5">
-                <span id="tagMood" class="text-xs font-semibold px-2.5 py-1 rounded-full"></span>
-                <span id="tagTime" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600"></span>
+            <h2 id="modalTitle" class="text-2xl font-bold text-slate-900 pr-6 mb-2"></h2>
+            
+            <div class="flex flex-wrap gap-2 mb-6">
+                <span id="modalTimeBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600"></span>
+                <span id="modalProteinBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700"></span>
+                <span id="modalCuisineBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700"></span>
             </div>
-            
-            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Ingredients</h3>
-            <ul id="recipeIngredients" class="text-sm space-y-1.5 text-slate-600 list-disc list-inside mb-5 pl-1"></ul>
 
-            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Quick Steps</h3>
-            <ol id="recipeSteps" class="text-sm space-y-2.5 text-slate-600 list-decimal list-inside pl-1"></ol>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Ingredients</h3>
+            <ul id="modalIngredients" class="text-sm space-y-2 text-slate-600 list-disc list-inside mb-6 pl-1"></ul>
+
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Directions</h3>
+            <ol id="modalSteps" class="text-sm space-y-3 text-slate-600 list-decimal list-inside pl-1"></ol>
         </div>
     </div>
 
+    <!-- Application Engine Architecture -->
     <script>
-        const recipes = [
-            { title: "Crispy Garlic Chili Noodles", mood: "comfort", time: "quick", ingredients: ["Ramen or Udon noodles", "Garlic (4 cloves, minced)", "Chili crisp oil (2 tbsp)", "Soy sauce (1 tbsp)", "Green onions"], steps: ["Boil noodles according to package instructions.", "Sauté minced garlic in a pan with a splash of neutral oil until fragrant.", "Toss noodles into the pan with garlic, soy sauce, and chili crisp oil.", "Garnish with chopped green onions and serve warm."] },
-            { title: "Lemon Parmesan Arugula Salad", mood: "healthy", time: "quick", ingredients: ["Fresh arugula (4 cups)", "Shaved parmesan cheese", "1 Fresh lemon", "Extra virgin olive oil", "Toasted pine nuts", "Flaky sea salt"], steps: ["Will wash and thoroughly dry the arugula leaves.", "Whisk fresh lemon juice with olive oil, salt, and black pepper in a large bowl.", "Toss the arugula gently in the dressing until coated.", "Top generously with shaved parmesan and toasted pine nuts right before serving."] },
-            { title: "5-Minute Berry Mug Cobbler", mood: "sweet", time: "quick", ingredients: ["Frozen mixed berries (1/2 cup)", "All-purpose flour (3 tbsp)", "Sugar (1 tbsp)", "Butter (1 tbsp, melted)", "Milk (1 tbsp)"], steps: ["Place berries in a microwave-safe mug and heat for 30 seconds to soften.", "In a tiny bowl, mix flour, sugar, melted butter, and milk into a soft dough.", "Drop spoonfuls of dough over the warm berries.", "Microwave on high for 60-90 seconds until the cobbler topping is firm."] },
-            { title: "Slow-Braised Tuscan Cream Chicken", mood: "comfort", time: "leisurely", ingredients: ["Chicken thighs (4 pieces)", "Heavy cream (1/2 cup)", "Sun-dried tomatoes (1/4 cup)", "Fresh spinach (2 cups)", "Garlic & Italian seasoning"], steps: ["Sear chicken thighs in a hot skillet until skin is crispy and golden, then set aside.", "In the same pan, sauté garlic and sun-dried tomatoes, then pour in heavy cream.", "Bring cream to a low simmer and stir in Italian seasonings.", "Return chicken to the pan, submerge in sauce, cover, and simmer low for 25 minutes adding spinach at the very end."] }
+        // Massive 10+ Recipe Cookbook Index Database
+        const cookbook = [
+            { title: "Crispy Garlic Chili Noodles", time: "under30", protein: "vegetarian", cuisine: "asian", ingredients: ["Ramen or Udon noodles", "Garlic (4 cloves, minced)", "Chili crisp oil (2 tbsp)", "Soy sauce (1 tbsp)", "Green onions"], steps: ["Boil noodles according to package instructions.", "Sauté minced garlic in a pan with neutral oil until light fragrant.", "Toss noodles into the pan with garlic, soy sauce, and chili crisp oil.", "Garnish with chopped green onions and serve warm."] },
+            { title: "Lemon Parmesan Chicken Pasta", time: "45min", protein: "chicken", cuisine: "italian", ingredients: ["Chicken breast (2, sliced)", "Penne pasta", "Heavy cream (1/2 cup)", "Lemon juice & zest", "Grated Parmesan (1/2 cup)", "Garlic"], steps: ["Cook pasta in salted water until al dente.", "Sear sliced chicken breast in skillet until golden and thoroughly cooked.", "Remove chicken. Sauté garlic, add lemon juice, heavy cream, and bring to low simmer.", "Toss pasta, chicken, and parmesan cheese into sauce until velvety."] },
+            { title: "Skillet Flank Steak Fajitas", time: "under30", protein: "beef", cuisine: "mexican", ingredients: ["Flank steak (sliced thin)", "Bell peppers (2, sliced)", "White onion (1, sliced)", "Fajita spice blend", "Flour tortillas", "Lime"], steps: ["Toss steak strips in fajita seasoning and a splash of lime juice.", "Sear steak in roaring hot skillet for 4-5 mins, then set aside to rest.", "Cook peppers and onions in same hot skillet until tender-crisp.", "Serve everything family-style with warm flour tortillas."] },
+            { title: "Pan-Seared Butter Salmon", time: "under30", protein: "seafood", cuisine: "american", ingredients: ["Salmon fillets (2)", "Butter (2 tbsp)", "Fresh dill", "Lemon wedges", "Asparagus spears"], steps: ["Season salmon fillets lightly with salt, pepper, and garlic powder.", "Place salmon skin-side up in hot skillet with melted butter for 4 minutes.", "Flip salmon over, add asparagus to skillet, cook for another 4 minutes.", "Baste salmon with hot pan butter and squeeze fresh lemon over top."] },
+            { title: "Slow-Braised Bolognese Sauce", time: "leisurely", protein: "beef", cuisine: "italian", ingredients: ["Ground beef (1 lb)", "Crushed tomatoes (28oz)", "Diced onion, celery, carrot", "Red wine (1/2 cup)", "Tagliatelle pasta"], steps: ["Sauté finely diced onion, celery, and carrots in olive oil until soft.", "Add ground beef, brown completely, and pour in red wine to reduce by half.", "Stir in crushed tomatoes and simmer on low heat for 1.5 to 2 hours.", "Serve spooned heavily over perfectly tender tagliatelle pasta."] },
+            { title: "Sheet-Pan Honey Mustard Chicken", time: "45min", protein: "chicken", cuisine: "american", ingredients: ["Chicken thighs (4, bone-in)", "Dijon mustard (3 tbsp)", "Honey (2 tbsp)", "Baby potatoes (halved)", "Broccoli florets"], steps: ["Whisk honey, mustard, salt, and olive oil together in a bowl.", "Toss halved potatoes and broccoli florets across a large sheet baking pan.", "Nestle chicken thighs in center, brush honey mustard dressing over everything.", "Bake at 400°F for 35 minutes until chicken registers 165°F internally."] },
+            { title: "Creamy Shrimp Alfredo", time: "under30", protein: "seafood", cuisine: "italian", ingredients: ["Jumbo shrimp (12-15, peeled)", "Fettuccine pasta", "Butter (4 tbsp)", "Heavy cream (1 cup)", "Garlic", "Grated Parmesan"], steps: ["Boil pasta. Sauté minced garlic and peeled shrimp in butter for 3 mins until pink.", "Remove shrimp. Pour cream into skillet and simmer gently for 5 mins.", "Whisk in parmesan cheese until sauce thickens.", "Toss pasta and cooked shrimp back into sauce to emulsify."] },
+            { title: "Honey Garlic Beef Stir-Fry", time: "under30", protein: "beef", cuisine: "asian", ingredients: ["Flank steak strips", "Snap peas & Carrots", "Soy sauce (1/4 cup)", "Honey (2 tbsp)", "Minced ginger", "Jasmine rice"], steps: ["Whisk soy sauce, honey, ginger, and garlic to make stir-fry sauce base.", "Sear steak strips over high heat for 3 minutes, then remove from pan.", "Stir-fry snap peas and carrots until bright, add beef and pour sauce over top.", "Let sauce glaze and simmer for 2 minutes. Serve alongside fluffy jasmine rice."] },
+            { title: "Chipotle Sweet Potato Tacos", time: "under30", protein: "vegetarian", cuisine: "mexican", ingredients: ["Sweet potatoes (cubed)", "Black beans (1 can)", "Chipotle peppers in adobo", "Corn tortillas", "Cilantro & Cotija cheese"], steps: ["Toss cubed sweet potatoes with chipotle seasoning and olive oil.", "Roast sweet potatoes or pan-fry until fork-tender and crispy.", "Warm up black beans and lightly toast corn tortillas over low flame.", "Assemble tacos with potatoes, beans, fresh cilantro, and crumbled cheese."] },
+            { title: "Slow-Cooker Chicken Carnitas", time: "leisurely", protein: "chicken", cuisine: "mexican", ingredients: ["Chicken breasts (2 lbs)", "Orange juice (1/2 cup)", "Lime juice", "Cumin & Oregano", "Diced onions"], steps: ["Place chicken breasts, juices, spices, and diced onions inside slow cooker.", "Cover and cook on high setting for 4 hours (or low setting for 7 hours).", "Shred chicken using two forks right in the cooking liquid.", "Broil shredded meat on baking sheet for 5 mins to get crispy brown edges."] }
         ];
 
-        let selectedMood = '';
-        let selectedTime = '';
+        // Core Render Function
+        function renderRecipes() {
+            const timeVal = document.getElementById('timeFilter').value;
+            const proteinVal = document.getElementById('proteinFilter').value;
+            const cuisineVal = document.getElementById('cuisineFilter').value;
 
-        // Target all buttons securely using modern event bindings
-        document.querySelectorAll('#moodGroup button').forEach(button => {
-            button.addEventListener('click', function() {
-                selectedMood = this.getAttribute('data-mood');
-                document.querySelectorAll('#moodGroup button').forEach(b => b.className = "mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium");
+            // Apply Multi-Layer Filters
+            let results = cookbook.filter(recipe => {
+                const matchTime = (timeVal === 'all' || recipe.time === timeVal);
+                const matchProtein = (proteinVal === 'all' || recipe.protein === proteinVal);
+                const matchCuisine = (cuisineVal === 'all' || recipe.cuisine === cuisineVal);
+                return matchTime && matchProtein && matchCuisine;
+            });
+
+            // Cap display pool at exactly 10 cards max
+            const displayPool = results.slice(0, 10);
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+
+            if (displayPool.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 bg-white rounded-2xl border text-slate-400 font-medium text-sm">No precise matches found. Try widening your criteria parameters!</div>`;
+                return;
+            }
+
+            // Build Individual Cards dynamically
+            displayPool.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-slate-300 active:scale-[0.99] transition-all cursor-pointer flex flex-col justify-between";
                 
-                if(selectedMood === 'healthy') this.className = "mood-btn p-2.5 text-sm rounded-xl border font-semibold bg-emerald-50 border-emerald-500 text-emerald-700";
-                if(selectedMood === 'comfort') this.className = "mood-btn p-2.5 text-sm rounded-xl border font-semibold bg-amber-50 border-amber-500 text-amber-700";
-                if(selectedMood === 'sweet') this.className = "mood-btn p-2.5 text-sm rounded-xl border font-semibold bg-pink-50 border-pink-500 text-pink-700";
+                // Format display tags
+                let timeLabel = recipe.time === 'under30' ? '⚡ < 30m' : recipe.time === '45min' ? '⏱️ 45m' : '🍷 Leisurely';
+                
+                card.innerHTML = `
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-1">${recipe.title}</h3>
+                        <p class="text-xs text-slate-400 capitalize mb-4">${recipe.cuisine} • ${recipe.protein}</p>
+                    </div>
+                    <div class="flex items-center justify-between mt-2">
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-600">${timeLabel}</span>
+                        <span class="text-xs font-bold text-slate-800 flex items-center gap-0.5">View Recipe →</span>
+                    </div>
+                `;
+
+                // Wire Tap event directly to push modal open
+                card.addEventListener('click', () => openModal(recipe));
+                grid.appendChild(card);
             });
-        });
+        }
 
-        document.querySelectorAll('#timeGroup button').forEach(button => {
-            button.addEventListener('click', function() {
-                selectedTime = this.getAttribute('data-time');
-                document.querySelectorAll('#timeGroup button').forEach(b => b.className = "time-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium");
-                this.className = "time-btn p-2.5 text-sm rounded-xl border font-semibold bg-slate-900 border-slate-900 text-white";
-            });
-        });
+        // Modal Presentation Overlay Controllers
+        function openModal(recipe) {
+            document.getElementById('modalTitle').innerText = recipe.title;
+            document.getElementById('modalTimeBadge').innerText = recipe.time === 'under30' ? '⏱️ < 30 Mins' : recipe.time === '45min' ? '⏱️ 45 Mins' : '🍷 Leisurely';
+            document.getElementById('modalProteinBadge').innerText = recipe.protein.toUpperCase();
+            document.getElementById('modalCuisineBadge').innerText = recipe.cuisine.toUpperCase();
 
-        // The exact function that fires when pushing "Spin the wheel"
-        document.getElementById('spinBtn').addEventListener('click', function() {
-            let matches = recipes.filter(r => (!selectedMood || r.mood === selectedMood) && (!selectedTime || r.time === selectedTime));
-            if (matches.length === 0) matches = recipes; // fallback if no specific pairing match
-            
-            const randomRecipe = matches[Math.floor(Math.random() * matches.length)];
-
-            document.getElementById('recipeTitle').innerText = randomRecipe.title;
-            document.getElementById('tagTime').innerText = randomRecipe.time === 'quick' ? '⚡ Quick (< 20m)' : '🍷 Leisurely';
-            
-            const moodTag = document.getElementById('tagMood');
-            moodTag.innerText = randomRecipe.mood.toUpperCase();
-            if(randomRecipe.mood === 'healthy') moodTag.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700";
-            if(randomRecipe.mood === 'comfort') moodTag.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700";
-            if(randomRecipe.mood === 'sweet') moodTag.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-pink-50 text-pink-700";
-
-            const ingList = document.getElementById('recipeIngredients');
+            const ingList = document.getElementById('modalIngredients');
             ingList.innerHTML = '';
-            randomRecipe.ingredients.forEach(i => {
+            recipe.ingredients.forEach(i => {
                 let li = document.createElement('li');
                 li.innerText = i;
                 ingList.appendChild(li);
             });
 
-            const stepList = document.getElementById('recipeSteps');
+            const stepList = document.getElementById('modalSteps');
             stepList.innerHTML = '';
-            randomRecipe.steps.forEach(s => {
+            recipe.steps.forEach(s => {
                 let li = document.createElement('li');
                 li.innerText = s;
                 stepList.appendChild(li);
             });
 
-            document.getElementById('recipeCard').classList.remove('hidden');
+            document.getElementById('recipeModal').classList.remove('hidden');
+        }
+
+        // Event Setup Listeners
+        document.getElementById('searchBtn').addEventListener('click', renderRecipes);
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('recipeModal').classList.add('hidden');
         });
+        
+        // Hide overlay on backdrop tap
+        document.getElementById('recipeModal').addEventListener('click', function(e) {
+            if(e.target === this) this.classList.add('hidden');
+        });
+
+        // Initialize App View
+        renderRecipes();
     </script>
 </body>
 </html>
