@@ -1,5 +1,4 @@
-
-      <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,9 +11,7 @@
 </head>
 <body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans text-slate-800 flex flex-col items-center">
 
-    <!-- Main Container -->
     <div class="max-w-4xl w-full">
-        <!-- App Header -->
         <header class="text-center mb-8">
             <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">The Kitchen Matrix 🍽️</h1>
             <p class="text-sm text-slate-500 mt-1.5">Tailor your perfect menu instantly</p>
@@ -30,7 +27,7 @@
                         <option value="all">⏱️ Any Timeframe</option>
                         <option value="under30">&lt; 30 Minutes</option>
                         <option value="45min">45 Minutes</option>
-                        <option value="leisurely">🍷 Leisurely</option>
+                        <option value="leisurely">🍷 Leisurely / Slow Cook</option>
                     </select>
                 </div>
 
@@ -41,7 +38,8 @@
                         <option value="all">🥩 Any Choice</option>
                         <option value="chicken">Chicken</option>
                         <option value="beef">Beef / Steak</option>
-                        <option value="seafood">Seafood</option>
+                        <option value="pork">Pork</option>
+                        <option value="seafood">Seafood / Fish</option>
                         <option value="vegetarian">Vegetarian</option>
                     </select>
                 </div>
@@ -54,26 +52,26 @@
                         <option value="italian">Italian</option>
                         <option value="asian">Asian Inspired</option>
                         <option value="mexican">Mexican / Tex-Mex</option>
-                        <option value="american">American Classic</option>
+                        <option value="mediterranean">Greek / Mediterranean</option>
+                        <option value="french">French Classic</option>
+                        <option value="american">American Traditional</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Action Trigger -->
             <button id="searchBtn" class="w-full mt-6 bg-slate-900 hover:bg-slate-800 text-white font-medium py-3.5 rounded-xl shadow-lg shadow-slate-950/10 active:scale-[0.99] transition-all text-center block text-sm cursor-pointer">
                 ✨ Generate Match Results
             </button>
         </div>
 
-        <!-- Recipe Cards Output Grid -->
+        <!-- Cards Output Grid -->
         <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
     </div>
 
-    <!-- Full-Screen Interactive Modal for Recipe Detail Display -->
+    <!-- Modal Layout -->
     <div id="recipeModal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-6 overflow-y-auto max-h-[85vh] relative border border-slate-100">
             <button id="closeModal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-xl p-2 cursor-pointer">&times;</button>
-            
             <h2 id="modalTitle" class="text-2xl font-bold text-slate-900 pr-6 mb-2"></h2>
             
             <div class="flex flex-wrap gap-2 mb-6">
@@ -90,29 +88,41 @@
         </div>
     </div>
 
-    <!-- Application Engine Architecture -->
     <script>
-        // Massive 10+ Recipe Cookbook Index Database
         const cookbook = [
-            { title: "Crispy Garlic Chili Noodles", time: "under30", protein: "vegetarian", cuisine: "asian", ingredients: ["Ramen or Udon noodles", "Garlic (4 cloves, minced)", "Chili crisp oil (2 tbsp)", "Soy sauce (1 tbsp)", "Green onions"], steps: ["Boil noodles according to package instructions.", "Sauté minced garlic in a pan with neutral oil until light fragrant.", "Toss noodles into the pan with garlic, soy sauce, and chili crisp oil.", "Garnish with chopped green onions and serve warm."] },
-            { title: "Lemon Parmesan Chicken Pasta", time: "45min", protein: "chicken", cuisine: "italian", ingredients: ["Chicken breast (2, sliced)", "Penne pasta", "Heavy cream (1/2 cup)", "Lemon juice & zest", "Grated Parmesan (1/2 cup)", "Garlic"], steps: ["Cook pasta in salted water until al dente.", "Sear sliced chicken breast in skillet until golden and thoroughly cooked.", "Remove chicken. Sauté garlic, add lemon juice, heavy cream, and bring to low simmer.", "Toss pasta, chicken, and parmesan cheese into sauce until velvety."] },
-            { title: "Skillet Flank Steak Fajitas", time: "under30", protein: "beef", cuisine: "mexican", ingredients: ["Flank steak (sliced thin)", "Bell peppers (2, sliced)", "White onion (1, sliced)", "Fajita spice blend", "Flour tortillas", "Lime"], steps: ["Toss steak strips in fajita seasoning and a splash of lime juice.", "Sear steak in roaring hot skillet for 4-5 mins, then set aside to rest.", "Cook peppers and onions in same hot skillet until tender-crisp.", "Serve everything family-style with warm flour tortillas."] },
-            { title: "Pan-Seared Butter Salmon", time: "under30", protein: "seafood", cuisine: "american", ingredients: ["Salmon fillets (2)", "Butter (2 tbsp)", "Fresh dill", "Lemon wedges", "Asparagus spears"], steps: ["Season salmon fillets lightly with salt, pepper, and garlic powder.", "Place salmon skin-side up in hot skillet with melted butter for 4 minutes.", "Flip salmon over, add asparagus to skillet, cook for another 4 minutes.", "Baste salmon with hot pan butter and squeeze fresh lemon over top."] },
-            { title: "Slow-Braised Bolognese Sauce", time: "leisurely", protein: "beef", cuisine: "italian", ingredients: ["Ground beef (1 lb)", "Crushed tomatoes (28oz)", "Diced onion, celery, carrot", "Red wine (1/2 cup)", "Tagliatelle pasta"], steps: ["Sauté finely diced onion, celery, and carrots in olive oil until soft.", "Add ground beef, brown completely, and pour in red wine to reduce by half.", "Stir in crushed tomatoes and simmer on low heat for 1.5 to 2 hours.", "Serve spooned heavily over perfectly tender tagliatelle pasta."] },
-            { title: "Sheet-Pan Honey Mustard Chicken", time: "45min", protein: "chicken", cuisine: "american", ingredients: ["Chicken thighs (4, bone-in)", "Dijon mustard (3 tbsp)", "Honey (2 tbsp)", "Baby potatoes (halved)", "Broccoli florets"], steps: ["Whisk honey, mustard, salt, and olive oil together in a bowl.", "Toss halved potatoes and broccoli florets across a large sheet baking pan.", "Nestle chicken thighs in center, brush honey mustard dressing over everything.", "Bake at 400°F for 35 minutes until chicken registers 165°F internally."] },
-            { title: "Creamy Shrimp Alfredo", time: "under30", protein: "seafood", cuisine: "italian", ingredients: ["Jumbo shrimp (12-15, peeled)", "Fettuccine pasta", "Butter (4 tbsp)", "Heavy cream (1 cup)", "Garlic", "Grated Parmesan"], steps: ["Boil pasta. Sauté minced garlic and peeled shrimp in butter for 3 mins until pink.", "Remove shrimp. Pour cream into skillet and simmer gently for 5 mins.", "Whisk in parmesan cheese until sauce thickens.", "Toss pasta and cooked shrimp back into sauce to emulsify."] },
-            { title: "Honey Garlic Beef Stir-Fry", time: "under30", protein: "beef", cuisine: "asian", ingredients: ["Flank steak strips", "Snap peas & Carrots", "Soy sauce (1/4 cup)", "Honey (2 tbsp)", "Minced ginger", "Jasmine rice"], steps: ["Whisk soy sauce, honey, ginger, and garlic to make stir-fry sauce base.", "Sear steak strips over high heat for 3 minutes, then remove from pan.", "Stir-fry snap peas and carrots until bright, add beef and pour sauce over top.", "Let sauce glaze and simmer for 2 minutes. Serve alongside fluffy jasmine rice."] },
-            { title: "Chipotle Sweet Potato Tacos", time: "under30", protein: "vegetarian", cuisine: "mexican", ingredients: ["Sweet potatoes (cubed)", "Black beans (1 can)", "Chipotle peppers in adobo", "Corn tortillas", "Cilantro & Cotija cheese"], steps: ["Toss cubed sweet potatoes with chipotle seasoning and olive oil.", "Roast sweet potatoes or pan-fry until fork-tender and crispy.", "Warm up black beans and lightly toast corn tortillas over low flame.", "Assemble tacos with potatoes, beans, fresh cilantro, and crumbled cheese."] },
-            { title: "Slow-Cooker Chicken Carnitas", time: "leisurely", protein: "chicken", cuisine: "mexican", ingredients: ["Chicken breasts (2 lbs)", "Orange juice (1/2 cup)", "Lime juice", "Cumin & Oregano", "Diced onions"], steps: ["Place chicken breasts, juices, spices, and diced onions inside slow cooker.", "Cover and cook on high setting for 4 hours (or low setting for 7 hours).", "Shred chicken using two forks right in the cooking liquid.", "Broil shredded meat on baking sheet for 5 mins to get crispy brown edges."] }
+            // ITALIAN
+            { title: "Crispy Tuscan Garlic Chicken", time: "45min", protein: "chicken", cuisine: "italian", ingredients: ["Chicken thighs (4, skin-on)", "Heavy cream (1/2 cup)", "Sun-dried tomatoes (1/4 cup)", "Fresh spinach (2 cups)", "Garlic cloves (4)", "Italian seasoning"], steps: ["Sear chicken thighs skin-side down until golden brown and crispy, then flip and cook through.", "Remove chicken. In the same pan, sauté minced garlic and chopped sun-dried tomatoes.", "Pour in cream and herbs, bringing to a slow simmer.", "Stir in spinach until wilted, return chicken to pan, and spoon sauce over the top."] },
+            { title: "Classic Creamy Shrimp Alfredo", time: "under30", protein: "seafood", cuisine: "italian", ingredients: ["Jumbo shrimp (12, peeled)", "Fettuccine pasta (8 oz)", "Butter (4 tbsp)", "Heavy cream (1 cup)", "Grated Parmesan (1/2 cup)", "Garlic"], steps: ["Boil pasta in salted water until al dente.", "Sauté garlic and shrimp in a skillet with melted butter until shrimp turn pink (about 3 mins).", "Remove shrimp. Pour heavy cream into the skillet and let simmer gently for 5 minutes.", "Whisk in parmesan until smooth, then toss pasta and shrimp back into the rich sauce."] },
+            { title: "Slow-Braised Beef Bolognese", time: "leisurely", protein: "beef", cuisine: "italian", ingredients: ["Ground beef (1 lb)", "Crushed tomatoes (28 oz)", "Onion, celery, carrot (finely diced)", "Red wine (1/2 cup)", "Pappardelle pasta"], steps: ["Sauté vegetables in olive oil until soft and translucent.", "Add ground beef and brown completely, draining excess fat if necessary.", "Pour in red wine and let it simmer until reduced by half.", "Stir in crushed tomatoes, reduce heat to low, cover and simmer for 1.5 to 2 hours. Serve over hot pasta."] },
+
+            // ASIAN INSPIRED
+            { title: "Honey Garlic Beef Stir-Fry", time: "under30", protein: "beef", cuisine: "asian", ingredients: ["Flank steak (sliced thin)", "Broccoli florets (2 cups)", "Soy sauce (1/4 cup)", "Honey (2 tbsp)", "Fresh ginger & garlic"], steps: ["Whisk soy sauce, honey, minced ginger, and garlic together in a bowl.", "Sear beef strips over high heat in a hot skillet for 3 minutes, then set aside.", "Toss broccoli into the pan with 2 tablespoons of water, steaming until bright green.", "Return beef to pan, pour sauce over top, and let simmer until thick and glaze-like."] },
+            { title: "Garlic Chili Crisp Udon Noodles", time: "under30", protein: "vegetarian", cuisine: "asian", ingredients: ["Udon or Ramen noodles", "Chili crisp oil (2 tbsp)", "Soy sauce (1tbsp)", "Garlic cloves (3, minced)", "Green onions"], steps: ["Prepare noodles according to package setup.", "Sauté minced garlic in a clean pan with a splash of oil until fragrant.", "Add noodles, soy sauce, and chili crisp directly to the skillet.", "Toss dynamically for 2 minutes to coat everything thoroughly, then top with chopped green onions."] },
+            { title: "Slow-Cooker Sticky Pork Belly", time: "leisurely", protein: "pork", cuisine: "asian", ingredients: ["Pork belly or shoulder (2 lbs)", "Brown sugar (1/4 cup)", "Soy sauce (1/2 cup)", "Rice vinegar (2 tbsp)", "Five-spice powder"], steps: ["Cut pork into uniform bite-sized cubes.", "Whisk brown sugar, soy sauce, vinegar, and five-spice together in your slow cooker liner.", "Add pork blocks and stir to coat completely.", "Cover and cook on low setting for 6-7 hours until pork is melt-in-your-mouth tender."] },
+
+            // MEXICAN / TEX-MEX
+            { title: "Skillet Flank Steak Fajitas", time: "under30", protein: "beef", cuisine: "mexican", ingredients: ["Flank steak strips", "Bell peppers (2, sliced)", "White onion (1, sliced)", "Fajita seasoning", "Flour tortillas", "Lime wedges"], steps: ["Toss steak strips thoroughly in fajita spice and lime juice.", "Sear steak strips in a smoking hot skillet for 4 minutes, then set aside to rest.", "Sauté peppers and onions in the same pan until tender-crisp with charred edges.", "Slice across the grain and serve alongside warm flour tortillas."] },
+            { title: "Crispy Shredded Pork Carnitas", time: "leisurely", protein: "pork", cuisine: "mexican", ingredients: ["Pork shoulder (3 lbs)", "Orange juice (1/2 cup)", "Lime juice (2 tbsp)", "Garlic powder & Cumin", "Fresh cilantro"], steps: ["Rub pork shoulder with cumin, salt, pepper, and garlic powder.", "Place in slow cooker with orange juice and lime juice. Cook on low for 8 hours.", "Shred meat using two forks.", "For crispy edges, spread meat on a baking sheet and broil for 5 minutes before serving."] },
+            { title: "Chipotle Sweet Potato Tacos", time: "under30", protein: "vegetarian", cuisine: "mexican", ingredients: ["Sweet potatoes (cubed)", "Black beans (1 can)", "Chipotle peppers in adobo", "Corn tortillas", "Cotija cheese"], steps: ["Toss cubed sweet potatoes with adobo sauce, salt, and olive oil.", "Roast at 400°F for 20 minutes until tender and crispy on the edges.", "Warm black beans in a small saucepan.", "Assemble in toasted corn tortillas with potatoes, beans, and crumbled cheese."] },
+
+            // MEDITERRANEAN / GREEK
+            { title: "Sheet-Pan Greek Lemon Chicken", time: "45min", protein: "chicken", cuisine: "mediterranean", ingredients: ["Chicken breasts (2, cubed)", "Kalamata olives", "Cherry tomatoes", "Feta cheese (crumbled)", "Lemon juice & Olive oil", "Oregano"], steps: ["Toss chicken cubes, tomatoes, and olives on a large baking sheet with oil, lemon juice, and oregano.", "Spread evenly in a single layer.", "Bake at 375°F for 25-30 minutes until chicken is completely cooked through.", "Remove from oven and scatter fresh crumbled feta cheese heavily over the top."] },
+            { title: "Garlic Herb Seared Sea Bass", time: "under30", protein: "seafood", cuisine: "mediterranean", ingredients: ["Sea bass or Cod fillets", "Olive oil (2 tbsp)", "Minced garlic", "Fresh parsley", "Lemon slices"], steps: ["Pat fish fillets completely dry and season with salt and pepper.", "Heat olive oil in a skillet over medium-high heat.", "Cook fish for 4 minutes on one side until a golden crust forms, then flip.", "Add garlic, parsley, and lemon slices to the pan, basting the fish for 3 more minutes."] },
+
+            // FRENCH CLASSIC
+            { title: "Slow-Cooked Beef Bourguignon", time: "leisurely", protein: "beef", cuisine: "french", ingredients: ["Beef chuck roast (2 lbs, cubed)", "Red wine (2 cups)", "Beef broth (1 cup)", "Pearl onions", "Mushrooms (sliced)", "Bacon strips (3)"], steps: ["Fry bacon in a large heavy pot until crisp, then remove bacon.", "Sear beef cubes in the rendered bacon fat until deep brown on all sides.", "Pour in red wine and broth, scraping up the browned bits from the bottom.", "Add onions and mushrooms, cover tightly, and simmer on low heat for 2.5 hours until beef breaks apart with a spoon."] },
+            { title: "Classic Pork Chops au Poivre", time: "under30", protein: "pork", cuisine: "french", ingredients: ["Thick-cut pork chops (2)", "Coarsely crushed peppercorns", "Heavy cream (1/4 cup)", "Beef broth (1/4 cup)", "Butter"], steps: ["Press crushed peppercorns firmly into both sides of the pork chops.", "Sear chops in a hot skillet with butter for 5-6 minutes per side until done.", "Remove chops. Pour broth into the hot pan to deglaze, letting it reduce slightly.", "Stir in heavy cream, simmer for 1 minute to thicken, and pour over the chops."] },
+
+            // AMERICAN TRADITIONAL
+            { title: "Cast-Iron Garlic Butter Steak", time: "under30", protein: "beef", cuisine: "american", ingredients: ["Ribeye or New York Strip steak", "Butter (3 tbsp)", "Fresh rosemary", "Garlic cloves (3)", "Coarse sea salt"], steps: ["Bring steak to room temp and season generously with coarse salt and pepper.", "Sear in a smoking hot cast-iron skillet for 3 minutes without moving it.", "Flip steak, drop in butter, smashed garlic, and rosemary sprigs.", "Tilt skillet and continuously spoon the melted foam butter over the steak for 3 more minutes."] },
+            { title: "Sheet-Pan Honey Mustard Chicken", time: "45min", protein: "chicken", cuisine: "american", ingredients: ["Chicken breasts (2)", "Baby potatoes (halved)", "Dijon mustard (2 tbsp)", "Honey (2 tbsp)", "Olive oil"], steps: ["Mix honey, mustard, and olive oil together in a cup.", "Arrange halved baby potatoes across a greased baking sheet.", "Place chicken breasts in the center and brush the honey mustard glaze over everything.", "Bake at 400°F for 30-35 minutes until potatoes are crispy and chicken is tender."] }
         ];
 
-        // Core Render Function
         function renderRecipes() {
             const timeVal = document.getElementById('timeFilter').value;
             const proteinVal = document.getElementById('proteinFilter').value;
             const cuisineVal = document.getElementById('cuisineFilter').value;
 
-            // Apply Multi-Layer Filters
             let results = cookbook.filter(recipe => {
                 const matchTime = (timeVal === 'all' || recipe.time === timeVal);
                 const matchProtein = (proteinVal === 'all' || recipe.protein === proteinVal);
@@ -120,22 +130,26 @@
                 return matchTime && matchProtein && matchCuisine;
             });
 
-            // Cap display pool at exactly 10 cards max
+            // Smart fallback mechanism: if exact match is empty, show everything that partial matches
+            if (results.length === 0) {
+                results = cookbook.filter(recipe => {
+                    return (recipe.time === timeVal || recipe.protein === proteinVal || recipe.cuisine === cuisineVal);
+                });
+            }
+
             const displayPool = results.slice(0, 10);
             const grid = document.getElementById('cardsGrid');
             grid.innerHTML = '';
 
             if (displayPool.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 bg-white rounded-2xl border text-slate-400 font-medium text-sm">No precise matches found. Try widening your criteria parameters!</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-12 bg-white rounded-2xl border text-slate-400 font-medium text-sm">No matches found. Try resetting filters to "Any Choice"!</div>`;
                 return;
             }
 
-            // Build Individual Cards dynamically
             displayPool.forEach(recipe => {
                 const card = document.createElement('div');
                 card.className = "bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-slate-300 active:scale-[0.99] transition-all cursor-pointer flex flex-col justify-between";
                 
-                // Format display tags
                 let timeLabel = recipe.time === 'under30' ? '⚡ < 30m' : recipe.time === '45min' ? '⏱️ 45m' : '🍷 Leisurely';
                 
                 card.innerHTML = `
@@ -149,13 +163,11 @@
                     </div>
                 `;
 
-                // Wire Tap event directly to push modal open
                 card.addEventListener('click', () => openModal(recipe));
                 grid.appendChild(card);
             });
         }
 
-        // Modal Presentation Overlay Controllers
         function openModal(recipe) {
             document.getElementById('modalTitle').innerText = recipe.title;
             document.getElementById('modalTimeBadge').innerText = recipe.time === 'under30' ? '⏱️ < 30 Mins' : recipe.time === '45min' ? '⏱️ 45 Mins' : '🍷 Leisurely';
@@ -181,19 +193,19 @@
             document.getElementById('recipeModal').classList.remove('hidden');
         }
 
-        // Event Setup Listeners
         document.getElementById('searchBtn').addEventListener('click', renderRecipes);
         document.getElementById('closeModal').addEventListener('click', () => {
             document.getElementById('recipeModal').classList.add('hidden');
         });
         
-        // Hide overlay on backdrop tap
         document.getElementById('recipeModal').addEventListener('click', function(e) {
             if(e.target === this) this.classList.add('hidden');
         });
 
-        // Initialize App View
+        // Initial setup run
         renderRecipes();
     </script>
 </body>
 </html>
+
+  
