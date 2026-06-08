@@ -6,13 +6,12 @@
     <title>What's for Dinner? ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Smooth transitions for a native app feel */
-        .mood-btn, .time-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .mood-btn, .time-btn { transition: all 0.2s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center p-4 font-sans text-slate-800">
 
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-6 border border-slate-100 transition-all">
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-6 border border-slate-100">
         
         <header class="text-center mb-8">
             <h1 class="text-2xl font-bold tracking-tight text-slate-900">Chef's Roulette 🍽️</h1>
@@ -23,22 +22,22 @@
             <div>
                 <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">The Mood</label>
                 <div class="grid grid-cols-3 gap-2" id="moodGroup">
-                    <button onclick="selectMood(this, 'healthy')" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 hover:border-slate-400 font-medium">🥗 Healthy</button>
-                    <button onclick="selectMood(this, 'comfort')" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 hover:border-slate-400 font-medium">🍝 Comfort</button>
-                    <button onclick="selectMood(this, 'sweet')" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 hover:border-slate-400 font-medium">🧁 Sweet</button>
+                    <button data-mood="healthy" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium">🥗 Healthy</button>
+                    <button data-mood="comfort" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium">🍝 Comfort</button>
+                    <button data-mood="sweet" class="mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium">🧁 Sweet</button>
                 </div>
             </div>
 
             <div>
                 <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Time Budget</label>
                 <div class="grid grid-cols-2 gap-2" id="timeGroup">
-                    <button onclick="selectTime(this, 'quick')" class="time-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 hover:border-slate-400 font-medium">⚡ Quick (< 20m)</button>
-                    <button onclick="selectTime(this, 'leisurely')" class="time-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 hover:border-slate-400 font-medium">🍷 Leisurely</button>
+                    <button data-time="quick" class="time-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium">⚡ Quick (&lt; 20m)</button>
+                    <button data-time="leisurely" class="time-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium">🍷 Leisurely</button>
                 </div>
             </div>
         </div>
 
-        <button onclick="generateRecipe()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-4 rounded-xl shadow-lg shadow-slate-950/10 active:scale-[0.98] transition-all text-center block text-base">
+        <button id="spinBtn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-4 rounded-xl shadow-lg shadow-slate-950/10 active:scale-[0.98] transition-all text-center block text-base cursor-pointer">
             ✨ Spin the Recipe Wheel
         </button>
 
@@ -59,9 +58,70 @@
     </div>
 
     <script>
-        // Recipe Database Matrix
         const recipes = [
             { title: "Crispy Garlic Chili Noodles", mood: "comfort", time: "quick", ingredients: ["Ramen or Udon noodles", "Garlic (4 cloves, minced)", "Chili crisp oil (2 tbsp)", "Soy sauce (1 tbsp)", "Green onions"], steps: ["Boil noodles according to package instructions.", "Sauté minced garlic in a pan with a splash of neutral oil until fragrant.", "Toss noodles into the pan with garlic, soy sauce, and chili crisp oil.", "Garnish with chopped green onions and serve warm."] },
-            { title: "Lemon Parmesan Arugula Salad", mood: "healthy", time: "quick", ingredients: ["Fresh arugula (4 cups)", "Shaved parmesan cheese", "1 Fresh lemon", "Extra virgin olive oil", "Toasted pine nuts", "Flaky sea salt"], steps: ["Wash and thoroughly dry the arugula leaves.", "Whisk fresh lemon juice with olive oil, salt, and black pepper in a large bowl.", "Toss the arugula gently in the dressing until coated.", "Top generously with shaved parmesan and toasted pine nuts right before serving."] },
+            { title: "Lemon Parmesan Arugula Salad", mood: "healthy", time: "quick", ingredients: ["Fresh arugula (4 cups)", "Shaved parmesan cheese", "1 Fresh lemon", "Extra virgin olive oil", "Toasted pine nuts", "Flaky sea salt"], steps: ["Will wash and thoroughly dry the arugula leaves.", "Whisk fresh lemon juice with olive oil, salt, and black pepper in a large bowl.", "Toss the arugula gently in the dressing until coated.", "Top generously with shaved parmesan and toasted pine nuts right before serving."] },
             { title: "5-Minute Berry Mug Cobbler", mood: "sweet", time: "quick", ingredients: ["Frozen mixed berries (1/2 cup)", "All-purpose flour (3 tbsp)", "Sugar (1 tbsp)", "Butter (1 tbsp, melted)", "Milk (1 tbsp)"], steps: ["Place berries in a microwave-safe mug and heat for 30 seconds to soften.", "In a tiny bowl, mix flour, sugar, melted butter, and milk into a soft dough.", "Drop spoonfuls of dough over the warm berries.", "Microwave on high for 60-90 seconds until the cobbler topping is firm."] },
-            { title: "Slow-Braised Tuscan Cream Chicken", mood: "comfort", time: "leisurely", ingredients:
+            { title: "Slow-Braised Tuscan Cream Chicken", mood: "comfort", time: "leisurely", ingredients: ["Chicken thighs (4 pieces)", "Heavy cream (1/2 cup)", "Sun-dried tomatoes (1/4 cup)", "Fresh spinach (2 cups)", "Garlic & Italian seasoning"], steps: ["Sear chicken thighs in a hot skillet until skin is crispy and golden, then set aside.", "In the same pan, sauté garlic and sun-dried tomatoes, then pour in heavy cream.", "Bring cream to a low simmer and stir in Italian seasonings.", "Return chicken to the pan, submerge in sauce, cover, and simmer low for 25 minutes adding spinach at the very end."] }
+        ];
+
+        let selectedMood = '';
+        let selectedTime = '';
+
+        // Target all buttons securely using modern event bindings
+        document.querySelectorAll('#moodGroup button').forEach(button => {
+            button.addEventListener('click', function() {
+                selectedMood = this.getAttribute('data-mood');
+                document.querySelectorAll('#moodGroup button').forEach(b => b.className = "mood-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium");
+                
+                if(selectedMood === 'healthy') this.className = "mood-btn p-2.5 text-sm rounded-xl border font-semibold bg-emerald-50 border-emerald-500 text-emerald-700";
+                if(selectedMood === 'comfort') this.className = "mood-btn p-2.5 text-sm rounded-xl border font-semibold bg-amber-50 border-amber-500 text-amber-700";
+                if(selectedMood === 'sweet') this.className = "mood-btn p-2.5 text-sm rounded-xl border font-semibold bg-pink-50 border-pink-500 text-pink-700";
+            });
+        });
+
+        document.querySelectorAll('#timeGroup button').forEach(button => {
+            button.addEventListener('click', function() {
+                selectedTime = this.getAttribute('data-time');
+                document.querySelectorAll('#timeGroup button').forEach(b => b.className = "time-btn p-2.5 text-sm rounded-xl border bg-white border-slate-200 font-medium");
+                this.className = "time-btn p-2.5 text-sm rounded-xl border font-semibold bg-slate-900 border-slate-900 text-white";
+            });
+        });
+
+        // The exact function that fires when pushing "Spin the wheel"
+        document.getElementById('spinBtn').addEventListener('click', function() {
+            let matches = recipes.filter(r => (!selectedMood || r.mood === selectedMood) && (!selectedTime || r.time === selectedTime));
+            if (matches.length === 0) matches = recipes; // fallback if no specific pairing match
+            
+            const randomRecipe = matches[Math.floor(Math.random() * matches.length)];
+
+            document.getElementById('recipeTitle').innerText = randomRecipe.title;
+            document.getElementById('tagTime').innerText = randomRecipe.time === 'quick' ? '⚡ Quick (< 20m)' : '🍷 Leisurely';
+            
+            const moodTag = document.getElementById('tagMood');
+            moodTag.innerText = randomRecipe.mood.toUpperCase();
+            if(randomRecipe.mood === 'healthy') moodTag.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700";
+            if(randomRecipe.mood === 'comfort') moodTag.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700";
+            if(randomRecipe.mood === 'sweet') moodTag.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-pink-50 text-pink-700";
+
+            const ingList = document.getElementById('recipeIngredients');
+            ingList.innerHTML = '';
+            randomRecipe.ingredients.forEach(i => {
+                let li = document.createElement('li');
+                li.innerText = i;
+                ingList.appendChild(li);
+            });
+
+            const stepList = document.getElementById('recipeSteps');
+            stepList.innerHTML = '';
+            randomRecipe.steps.forEach(s => {
+                let li = document.createElement('li');
+                li.innerText = s;
+                stepList.appendChild(li);
+            });
+
+            document.getElementById('recipeCard').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
